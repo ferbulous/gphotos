@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Declare Telegram variables
+tg_token="600xxxx:AAHKNxxx"
+chat_id="10xxx"
+
 cd /sdcard/temp2
 
 # # Step 1: Convert .MOV files to .MP4 with the same filename as .JPG files
@@ -138,7 +142,7 @@ mv /sdcard/temp2/*.{JPG,jpg,MP4,mp4,MOV,mov,PNG,png,HEIC,heic,GIF,gif,WEBP,webp}
 echo "All videos and photos moved to /sdcard/Google_photos_suli."
 
 # Step 6: Telegram notification
-find . -maxdepth 1 -type f -iname "*.MOV" -not -iname "*.[jJ][pP][gG]" -print0 | xargs -0 -P 3 -n 1 -I {} sh -c 'ffmpeg -i "$1" -vcodec libx264 "${1%.*}.mp4"' sh {} && curl -s -X POST https://api.telegram.org/bot6001838082:AAHKNZlZ2Uam_D9eDAWVVA8RaocptDbrGX0/sendMessage -d chat_id=109957191 -d text="All .MOV files converted to h.264 successfully."
+find "$temp_directory" -maxdepth 1 -type f -iname "*.MOV" -not -iname "*.[jJ][pP][gG]" -print0 | xargs -0 -P 3 -n1 -I {} sh -c 'ffmpeg -i "$1" -vcodec libx264 "${1%.*}.mp4"' sh {} && curl -s -X POST https://api.telegram.org/bot"$tg_token"/sendMessage -d chat_id="$chat_id" -d text="All .MOV files converted to h.264 successfully."
 
 # # step 7
 # am broadcast -a foo.bar.baz.intent.action.MY_SCRIPT_COMPLETED
