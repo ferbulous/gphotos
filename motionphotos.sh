@@ -164,7 +164,7 @@ mv "$temp_directory"/*.{JPG,jpg,MP4,mp4,MOV,mov,PNG,png,HEIC,heic,GIF,gif,WEBP,w
 echo "All videos and photos moved to $googlephotos_directory."
 
 # Step 6: Telegram notification
-find "$temp_directory" -maxdepth 1 -type f -iname "*.MOV" -not -iname "*.[jJ][pP][gG]" -print0 | xargs -0 -P 3 -n1 -I {} sh -c 'ffmpeg -i "$1" -vcodec libx264 "${1%.*}.mp4"' sh {} && curl -s -X POST https://api.telegram.org/bot6001838082:AAHKNZlZ2Uam_D9eDAWVVA8RaocptDbrGX0/sendMessage -d chat_id=109957191 -d text="All .MOV files converted to h.264 successfully."
+find "$temp_directory" -maxdepth 1 -type f -iname "*.MOV" -not -iname "*.[jJ][pP][gG]" -print0 | xargs -0 -P 3 -n1 -I {} sh -c 'ffmpeg -i "$1" -vcodec libx264 "${1%.*}.mp4"' sh {} && curl -s -X POST https://api.telegram.org/$chattoken/sendMessage -d chat_id=$chatid -d text="All .MOV files converted to h.264 successfully."
 
 # Step 7: broadcast intent to automate app
 am broadcast -a foo.bar.baz.intent.action.MY_SCRIPT_COMPLETED
