@@ -6,7 +6,7 @@ googlephotos_directory="/sdcard/Google_photos"
 motionphoto_script="~/MotionPhotoMuxer/MotionPhotoMuxer.py"
 original_directory="/sdcard/ios"
 
-# Convert .heic to .jpg for corresponding .mov files and move originals
+# Convert .heic to .jpg for corresponding .mov files
 for heic_file in "$temp_directory"/*.heic; do
     if [ -e "$heic_file" ]; then
         filename=$(basename "$heic_file")
@@ -22,11 +22,6 @@ for heic_file in "$temp_directory"/*.heic; do
             # Convert .mov to .mp4
             ffmpeg -i "$mov_file" -c:v copy -c:a aac -strict experimental "$temp_directory/$filename_noext.mp4"
             echo "Converted $filename to $filename_noext.mp4"
-
-            # Move original .heic and .mov files
-            mv "$heic_file" "$original_directory/$filename"
-            mv "$mov_file" "$original_directory/$filename"
-            echo "Moved original $filename to $original_directory"
         else
             echo "No corresponding .mov file found for $filename"
         fi
@@ -35,3 +30,14 @@ done
 
 # Run the motionphoto_script
 python "$motionphoto_script" --verbose --dir "$temp_directory" --output "$googlephotos_directory"
+
+# Remove original .heic, .mov, and .mp4 files
+for filename_noext in "$temp_directory"/*.jpg; do
+    if [ -e "$filename_noext" ]; then
+        rm "$temp_directory/$filename_noext.jpg"
+        rm "$temp_directory/$filename_noext.mp4"
+        rm "$original_directory/$filename_noext.heic"
+        rm "$original_directory/$filename_noext.mov"
+        echo "Removed original files for $filename_noext"
+    fi
+done
